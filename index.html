@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#fdf7fb">
+<title>Happy Birthday, Didu..</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --pink:#F4A6C1;--light:#FDE8F0;--mid:#F8C8DC;--dark:#E882A7;
+  --ink:#5C434E;--soft:#9A7B89;--paper:#FFF8FA;
+  --serif:'Cormorant Garamond',Georgia,serif;--sans:'DM Sans',sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden}
+body{
+  font-family:var(--sans);color:var(--ink);background:#fdf7fb;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+}
+.bg-grid{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:linear-gradient(#e8d9f0 1px,transparent 1px),
+    linear-gradient(90deg,#f0d9e6 1px,transparent 1px),#fdf7fb;
+  background-size:86px 86px;opacity:.62;
+}
+.cloud{
+  position:fixed;top:-110px;left:-65px;width:700px;height:240px;
+  border-radius:50%;background:#dfd0ee;opacity:.48;pointer-events:none;
+}
+#progress{
+  position:fixed;top:0;left:0;width:0;height:3px;z-index:50;
+  background:linear-gradient(90deg,var(--pink),#c9b2e6);
+  transition:width .55s ease;
+}
+.scene{
+  position:fixed;inset:0;z-index:2;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  text-align:center;
+  padding:clamp(28px,6vh,54px) clamp(20px,7vw,36px) calc(108px + env(safe-area-inset-bottom));
+  overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;
+  opacity:0;visibility:hidden;transform:translateY(12px) scale(1.01);
+  transition:opacity .65s ease,transform .75s ease,visibility .65s;
+}
+.scene::-webkit-scrollbar,.message-card::-webkit-scrollbar{display:none}
+.scene.active{opacity:1;visibility:visible;transform:none}
+.kicker{
+  flex:0 0 auto;font-size:.67rem;letter-spacing:.17em;text-transform:uppercase;
+  color:var(--soft);margin:0 0 clamp(16px,3vh,25px);
+}
+.heading{
+  font-family:var(--serif);font-weight:500;
+  font-size:clamp(2.65rem,12vw,5rem);line-height:1.02;
+  max-width:11ch;margin:0 auto;
+}
+.heading.medium{font-size:clamp(2rem,8vw,3.25rem);max-width:15ch;line-height:1.12}
+.description{
+  width:min(100%,390px);font-size:clamp(.88rem,3.8vw,.97rem);
+  line-height:1.8;color:var(--soft);margin:18px auto 0;
+}
+.date{
+  margin-top:24px;padding:9px 21px;border:1px solid var(--mid);
+  border-radius:50px;font-size:.76rem;letter-spacing:.12em;color:var(--dark);
+  background:rgba(255,245,248,.85);
+}
+.seal{
+  width:clamp(112px,34vw,140px);height:clamp(112px,34vw,140px);
+  flex:0 0 auto;border:0;background:none;cursor:pointer;margin:0 0 25px;
+  animation:float 4s ease-in-out infinite;
+}
+.seal svg{width:100%;height:100%;filter:drop-shadow(0 10px 18px #f4a6c144)}
+@keyframes float{50%{transform:translateY(-8px)}}
+.tap{
+  flex:0 0 auto;color:#c9aabb;font-size:.7rem;letter-spacing:.15em;
+  margin-top:25px;animation:pulse 2s infinite;
+}
+@keyframes pulse{50%{opacity:.38}}
+
+/* Personal message pages */
+.message-card{
+  width:min(100%,440px);max-height:min(62dvh,510px);
+  overflow-y:auto;overscroll-behavior:contain;scrollbar-width:none;
+  padding:clamp(21px,5vw,30px) clamp(19px,5vw,27px);
+  border:1px solid #f1d4e0;border-radius:25px;
+  background:rgba(255,248,250,.94);
+  box-shadow:0 15px 48px #e9b9ce25;text-align:left;
+}
+.message-card p{
+  font-family:var(--serif);font-size:clamp(1.22rem,5.3vw,1.58rem);
+  line-height:1.48;margin:0 0 17px;
+}
+.message-card p:last-child{margin-bottom:0}
+.message-card .small-note{font-size:clamp(1.08rem,4.8vw,1.35rem);color:#9b7182}
+.signature{margin-top:20px;font-family:var(--serif);font-size:1.3rem;color:var(--dark)}
+.big-heart{
+  font-family:var(--serif);font-size:4.5rem;color:var(--pink);
+  margin-bottom:12px;line-height:1;animation:heartbeat 2s infinite;
+}
+@keyframes heartbeat{50%{transform:scale(1.1)}}
+.cake{
+  width:min(62vw,225px);flex:0 0 auto;cursor:pointer;
+  border:0;background:none;margin:18px 0 8px;padding:0;
+}
+.cake svg{width:100%;display:block}
+.flame{transform-origin:100px 52px;animation:flick 1s infinite alternate}
+@keyframes flick{to{transform:scale(.85,1.15) rotate(4deg)}}
+.cake.blown .flame{display:none}
+.wish{display:none;animation:appear .8s ease forwards}
+.wish.show{display:block}
+@keyframes appear{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+.wish p{font-family:var(--serif);font-size:clamp(1.5rem,6vw,1.9rem);max-width:16ch;margin:8px auto}
+.final-title{
+  font-family:var(--serif);font-size:clamp(3.1rem,14vw,6rem);line-height:.98;
+  max-width:12ch;
+  background:linear-gradient(120deg,#d77c9f,#a98ac9,#e882a7);
+  background-clip:text;-webkit-background-clip:text;color:transparent;
+}
+.final-message{
+  font-family:var(--serif);font-size:clamp(1.3rem,5.8vw,1.65rem);
+  line-height:1.48;max-width:340px;margin:20px auto 0;
+}
+.final-sign{color:var(--dark);font-family:var(--serif);font-size:1.25rem;margin-top:22px}
+#fireworks{position:fixed;inset:0;width:100%;height:100%;z-index:1;pointer-events:none}
+#flash{position:fixed;inset:0;z-index:3;pointer-events:none;opacity:0;background:white}
+#flash.show{animation:flash .45s ease-out}
+@keyframes flash{0%{opacity:.5}100%{opacity:0}}
+
+/* Paw-shaped navigation */
+.paw-navigation{
+  position:fixed;z-index:100;bottom:calc(13px + env(safe-area-inset-bottom));
+  left:0;right:0;display:flex;align-items:center;justify-content:center;
+  gap:clamp(55px,19vw,95px);pointer-events:none;
+}
+.paw-btn{
+  pointer-events:auto;border:1px solid #f1ccdc;
+  background:rgba(255,248,250,.97);width:65px;height:69px;
+  border-radius:21px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:0;color:#9A7B89;
+  cursor:pointer;box-shadow:0 5px 20px #e882a733;
+  transition:transform .22s ease,background .22s ease,opacity .22s ease;
+  touch-action:manipulation;
+}
+.paw-btn svg{width:34px;height:34px;fill:#E882A7}
+.paw-btn span{font-size:8px;letter-spacing:1.8px;font-weight:600}
+.paw-btn.next{background:#F8C8DC}
+.paw-btn:active{transform:scale(.91)}
+.paw-btn:disabled{opacity:.28;cursor:default;box-shadow:none}
+@media(max-height:700px){
+  .scene{padding-top:20px;padding-bottom:calc(91px + env(safe-area-inset-bottom))}
+  .message-card{max-height:58dvh;padding:18px 19px}
+  .message-card p{font-size:clamp(1.1rem,4.7vw,1.35rem);line-height:1.4;margin-bottom:12px}
+  .seal{width:100px;height:100px;margin-bottom:16px}
+  .cake{width:min(48vw,175px);margin:8px 0 3px}
+  .paw-navigation{bottom:calc(7px + env(safe-area-inset-bottom))}
+  .paw-btn{width:57px;height:60px}
+  .paw-btn svg{width:29px;height:29px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+<div class="bg-grid"></div><div class="cloud"></div>
+<canvas id="fireworks" aria-hidden="true"></canvas>
+<div id="flash"></div><div id="progress"></div>
+<audio id="music" src="abhinav.mp3" loop preload="auto"></audio>
+
+<main id="experience">
+  <section class="scene active">
+    <p class="kicker"></p>
+    <button class="seal" id="start" aria-label="Start birthday surprise">
+      <svg viewBox="0 0 120 120" aria-hidden="true">
+        <circle cx="60" cy="60" r="54" fill="#F4A6C1"/>
+        <circle cx="60" cy="60" r="45" fill="#F8C8DC"/>
+        <circle cx="60" cy="60" r="54" fill="none" stroke="#E882A7" stroke-width="2" stroke-dasharray="3 6"/>
+        <path d="M60 82 C32 62 36 38 52 38 C57 38 60 42 60 46 C60 42 63 38 68 38 C84 38 88 62 60 82Z" fill="white"/>
+      </svg>
+    </button>
+    <h1 class="heading medium">A little surprise for you.</h1>
+    <p class="tap"></p>
+  </section>
+
+  <section class="scene">
+    <p class="kicker"></p>
+    <h1 class="heading">Happy Birthday,<br>Didu</h1>
+    <p class="description"></p>
+    <span class="date">3 NOVEMBER</span>
+  </section>
+
+  <section class="scene">
+    <p class="kicker">A little something from my heart</p>
+    <div class="message-card">
+      <p>Yaar Didi kaisi bolu... thanku yarr. Actually aapko pata nhi kis time sambhala hai aapne😭. Just like a mother... koi nahi tha, you were the one. Life ke utne difficult phase mein .. Thank you for being there..at my lowest... Tut gaya tha, par aapne bahut sikhaya, samjhaya. Nahi pata how to thank you, but very, very happy birthday.</p>
+    </div>
+  </section>
+
+  <section class="scene">
+    <p class="kicker"></p>
+    <div class="message-card">
+      <p>Sabse zyada masti... sabse zyada ladayi 🤣</p>
+      <p>May be not from blood but not less than that ..so happy birthday to my bestest sister ever..thank you for everything... remote se lekar 💗 TV tak, joota se lekar kutta tak, har chiz ke liye.</p>
+      <p class="small-note">Aaj birthday hai... ab kar du Blinkit? 🫶</p>
+    </div>
+    <div class="signature">Meri sabse pyari behna.</div>
+  </section>
+
+  <section class="scene">
+    <div class="big-heart">♡</div>
+    <p class="kicker"></p>
+    <h2 class="heading medium">Thank you for being there when no one else was.hmesa yaad rkhunga 💗</h2>
+    <p class="description" </p>
+    <div class="signature">You will always be special to me 💗</div>
+  </section>
+
+  <section class="scene" id="cakeScene">
+    <p class="kicker">One last thing before we celebrate</p>
+    <h2 class="heading medium">Make a wish.</h2>
+    <p class="description">Close your eyes for a moment. Think of something you truly want.</p>
+    <button class="cake" id="cake" aria-label="Blow out the birthday candle">
+      <svg viewBox="0 0 200 190" aria-hidden="true">
+        <g class="flame">
+          <path d="M100 18 C90 32 92 46 100 52 C108 46 110 32 100 18Z" fill="#F4A6C1"/>
+          <path d="M100 32 C96 40 97 46 100 48 C103 46 104 40 100 32Z" fill="white"/>
+        </g>
+        <rect x="96" y="52" width="8" height="30" rx="3" fill="#E882A7"/>
+        <rect x="40" y="82" width="120" height="38" rx="12" fill="white" stroke="#F8C8DC" stroke-width="2"/>
+        <path d="M40 98 q10 12 20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="#F8C8DC"/>
+        <rect x="20" y="120" width="160" height="48" rx="14" fill="#FDE8F0" stroke="#F8C8DC" stroke-width="2"/>
+        <path d="M20 138 q10 12 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="#dfd0ee"/>
+        <circle cx="60" cy="156" r="4" fill="#F4A6C1"/><circle cx="100" cy="158" r="4" fill="#E882A7"/><circle cx="140" cy="156" r="4" fill="#F4A6C1"/>
+        <ellipse cx="100" cy="172" rx="92" ry="6" fill="#dfd0ee" opacity=".7"/>
+      </svg>
+    </button>
+    <p class="tap" id="cakeHint">TAP THE CANDLE</p>
+    <div class="wish" id="wish">
+      <p>May life surprise you with everything beautiful.</p>
+      <div class="signature">Happy Birthday, Didi.</div>
+    </div>
+  </section>
+
+  <section class="scene" id="finalScene">
+    <p class="kicker"></p>
+    <h1 class="final-title">Happy Birthday!</h1>
+    <p class="final-message">Keep smiling, keep growing bhot paise kamao bhai ke saukh pure karo..bheekh mango ya kuch karo 😭 bhai ke saukh pure hone chhaiye .. ek sundar si kanya dhund ke lao ..dost ka no dialo ..nhi rhne do 😂. always wishing the best for you. Beta, aukaat se zyada ho gaya 😂 bhainsya khi ki ..suar khi ke 😺😺 ab nhi kar rha wish </p>
+    <div class="final-sign">With love,<br>Abhinav</div>
+  </section>
+</main>
+
+<nav class="paw-navigation" aria-label="Birthday scene navigation">
+  <button id="backBtn" class="paw-btn" aria-label="Previous scene" disabled>
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <ellipse cx="50" cy="65" rx="23" ry="19"/>
+      <ellipse cx="23" cy="35" rx="11" ry="15" transform="rotate(-25 23 35)"/>
+      <ellipse cx="43" cy="20" rx="11" ry="15"/>
+      <ellipse cx="64" cy="22" rx="11" ry="15"/>
+      <ellipse cx="81" cy="39" rx="11" ry="15" transform="rotate(25 81 39)"/>
+    </svg>
+    <span>BACK</span>
+  </button>
+  <button id="nextBtn" class="paw-btn next" aria-label="Next scene">
+    <svg viewBox="0 0 100 100" aria-hidden="true">
+      <ellipse cx="50" cy="65" rx="23" ry="19"/>
+      <ellipse cx="23" cy="35" rx="11" ry="15" transform="rotate(-25 23 35)"/>
+      <ellipse cx="43" cy="20" rx="11" ry="15"/>
+      <ellipse cx="64" cy="22" rx="11" ry="15"/>
+      <ellipse cx="81" cy="39" rx="11" ry="15" transform="rotate(25 81 39)"/>
+    </svg>
+    <span>NEXT</span>
+  </button>
+</nav>
+
+<script>
+(function(){
+  const scenes=[...document.querySelectorAll('.scene')];
+  const music=document.getElementById('music');
+  const progress=document.getElementById('progress');
+  const backBtn=document.getElementById('backBtn');
+  const nextBtn=document.getElementById('nextBtn');
+  const reduceMotion=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let current=0,started=false,finaleStarted=false;
+
+  function startMusic(){
+    music.volume=.8;
+    music.play().catch(()=>{});
+  }
+
+  function showScene(index){
+    if(index<0||index>=scenes.length)return;
+    scenes.forEach((scene,i)=>scene.classList.toggle('active',i===index));
+    current=index;
+    progress.style.width=((index+1)/scenes.length*100)+'%';
+    backBtn.disabled=index===0;
+    nextBtn.disabled=index===scenes.length-1;
+    if(index===scenes.length-1)startFireworks();
+  }
+
+  document.getElementById('start').addEventListener('click',()=>{
+    if(started)return;
+    started=true;
+    startMusic();
+    showScene(1);
+  });
+
+  backBtn.addEventListener('click',()=>showScene(current-1));
+
+  nextBtn.addEventListener('click',()=>{
+    if(!started){
+      started=true;
+      startMusic();
+    }
+    if(current===5){
+      blowCandle();
+      showScene(6);
+      return;
+    }
+    showScene(current+1);
+  });
+
+  const cake=document.getElementById('cake');
+  const wish=document.getElementById('wish');
+  function blowCandle(){
+    if(cake.classList.contains('blown'))return;
+    cake.classList.add('blown');
+    document.getElementById('cakeHint').style.display='none';
+    wish.classList.add('show');
+    fireworksBurst(innerWidth/2,innerHeight/2,65);
+  }
+  cake.addEventListener('click',()=>{
+    if(current===5)blowCandle();
+  });
+
+  const canvas=document.getElementById('fireworks');
+  const ctx=canvas.getContext('2d');
+  let particles=[],animation=null;
+  function resize(){
+    const dpr=Math.min(devicePixelRatio||1,2);
+    canvas.width=innerWidth*dpr;
+    canvas.height=innerHeight*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+  }
+  resize();
+  addEventListener('resize',resize);
+  const colors=['#F4A6C1','#F8C8DC','#E882A7','#dfd0ee','#c9b2e6','#ffffff','#f6d99b'];
+
+  function fireworksBurst(x,y,count=85){
+    if(reduceMotion)return;
+    const color=colors[Math.floor(Math.random()*colors.length)];
+    for(let i=0;i<count;i++){
+      const angle=Math.random()*Math.PI*2;
+      const speed=Math.random()*5+1.5;
+      particles.push({x,y,vx:Math.cos(angle)*speed,vy:Math.sin(angle)*speed,life:1,decay:Math.random()*.012+.007,size:Math.random()*2.5+1,color});
+    }
+    if(!animation)animation=requestAnimationFrame(draw);
+  }
+
+  function draw(){
+    ctx.clearRect(0,0,innerWidth,innerHeight);
+    particles=particles.filter(p=>p.life>0);
+    particles.forEach(p=>{
+      p.x+=p.vx;p.y+=p.vy;p.vy+=.035;p.vx*=.99;p.vy*=.99;p.life-=p.decay;
+      ctx.globalAlpha=Math.max(0,p.life);ctx.fillStyle=p.color;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();
+    });
+    ctx.globalAlpha=1;
+    if(particles.length)animation=requestAnimationFrame(draw);
+    else{animation=null;ctx.clearRect(0,0,innerWidth,innerHeight);}
+  }
+
+  function startFireworks(){
+    if(finaleStarted)return;
+    finaleStarted=true;
+    if(reduceMotion)return;
+    const launch=()=>{
+      if(current!==6)return;
+      fireworksBurst(Math.random()*innerWidth,Math.random()*innerHeight*.65,105);
+      const flash=document.getElementById('flash');
+      flash.classList.remove('show');
+      void flash.offsetWidth;
+      flash.classList.add('show');
+    };
+    launch();
+    setInterval(()=>{
+      if(current===6){launch();setTimeout(launch,420);}
+    },1500);
+  }
+
+  showScene(0);
+})();
+</script>
+</body>
+</html>
